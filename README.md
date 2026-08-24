@@ -154,12 +154,12 @@ academic-virtual-ass/
 
 ### 1. Prerequisites
 - Node.js 18+ or Bun 1.0+
-- Running FastAPI backend (`academic-virtual-A-BD` on `http://localhost:8000`)
+- Running FastAPI backend (Local `http://localhost:8000` or Cloud `https://ai-virtual-assistant-bd.onrender.com`)
 
 ### 2. Environment Setup
 Create a `.env.local` file in the root directory:
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_URL=https://ai-virtual-assistant-bd.onrender.com/api/v1
 ```
 
 ### 3. Install Dependencies

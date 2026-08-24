@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { clearStoredAuth, getStoredAccessToken, getStoredRefreshToken, storeTokens } from "./auth";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://ai-virtual-assistant-bd.onrender.com/api/v1";
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
