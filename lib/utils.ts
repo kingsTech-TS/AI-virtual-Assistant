@@ -35,6 +35,7 @@ export function getStatusBadgeClass(status?: string): string {
       return "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20";
     case "waiting":
     case "waiting_student":
+    case "waiting_for_student":
       return "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20";
     case "resolved":
     case "published":

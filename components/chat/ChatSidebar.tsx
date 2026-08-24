@@ -70,8 +70,8 @@ export function ChatSidebar({
               {searchTerm ? "No matching chats found" : "No recent conversations"}
             </div>
           ) : (
-            filtered.map((conv) => {
-              const id = conv.id || conv._id || "";
+            filtered.map((conv, idx) => {
+              const id = conv.id || conv._id || `conv-${idx}`;
               const isActive = activeConversationId === id;
               return (
                 <div

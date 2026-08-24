@@ -183,9 +183,9 @@ export function ChatContainer() {
             </div>
           ) : (
             <>
-              {messages.map((msg) => (
+              {messages.map((msg, idx) => (
                 <ChatMessageItem
-                  key={msg.id}
+                  key={msg.id ? `${msg.id}-${idx}` : `msg-${idx}`}
                   message={msg}
                   onSelectSource={(src) => setSelectedSource(src)}
                 />

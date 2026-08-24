@@ -24,17 +24,27 @@ export function useChat(initialConversationId?: string | null) {
       const conv = await conversationService.getConversation(id);
       setConversationId(id);
       if (conv.messages) {
-        const formatted: ChatMessage[] = conv.messages.map((m: any) => ({
-          id: m.id || m._id || String(Math.random()),
-          conversation_id: id,
-          sender: m.sender,
-          content: m.content,
-          intent: m.intent,
-          confidence: m.confidence,
-          sources: m.sources,
-          requires_human_support: m.requires_human_support,
-          created_at: m.created_at || new Date().toISOString(),
-        }));
+        const seenIds = new Set<string>();
+        const formatted: ChatMessage[] = [];
+        for (let i = 0; i < conv.messages.length; i++) {
+          const m = conv.messages[i];
+          let msgId = m.id || m._id || `msg-${i}-${Date.now()}`;
+          if (seenIds.has(msgId)) {
+            msgId = `${msgId}-${i}`;
+          }
+          seenIds.add(msgId);
+          formatted.push({
+            id: msgId,
+            conversation_id: id,
+            sender: m.sender,
+            content: m.content,
+            intent: m.intent,
+            confidence: m.confidence,
+            sources: m.sources,
+            requires_human_support: m.requires_human_support,
+            created_at: m.created_at || new Date().toISOString(),
+          });
+        }
         setMessages(formatted);
         // Set latest sources if present
         const lastAssistantMsg = [...formatted].reverse().find((m) => m.sender === "assistant");
@@ -67,7 +77,7 @@ export function useChat(initialConversationId?: string | null) {
     async (text: string) => {
       if (!text.trim()) return;
 
-      const userMsgId = "temp-" + Date.now();
+      const userMsgId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
       const userMessage: ChatMessage = {
         id: userMsgId,
         conversation_id: conversationId || undefined,
@@ -95,19 +105,24 @@ export function useChat(initialConversationId?: string | null) {
           setConversationId(responseData.conversation_id);
         }
 
-        const assistantMessage: ChatMessage = {
-          id: responseData.message_id || "asst-" + Date.now(),
-          conversation_id: responseData.conversation_id,
-          sender: "assistant",
-          content: responseData.response,
-          intent: responseData.intent,
-          confidence: responseData.confidence,
-          sources: responseData.sources || [],
-          requires_human_support: responseData.requires_human_support,
-          created_at: new Date().toISOString(),
-        };
+        const rawMsgId = responseData.message_id || `asst-${Date.now()}`;
 
-        setMessages((prev) => [...prev, assistantMessage]);
+        setMessages((prev) => {
+          const idExists = prev.some((m) => m.id === rawMsgId);
+          const finalMsgId = idExists ? `${rawMsgId}-${Date.now()}` : rawMsgId;
+          const assistantMessage: ChatMessage = {
+            id: finalMsgId,
+            conversation_id: responseData.conversation_id,
+            sender: "assistant",
+            content: responseData.response,
+            intent: responseData.intent,
+            confidence: responseData.confidence,
+            sources: responseData.sources || [],
+            requires_human_support: responseData.requires_human_support,
+            created_at: new Date().toISOString(),
+          };
+          return [...prev, assistantMessage];
+        });
 
         if (responseData.sources && responseData.sources.length > 0) {
           setActiveSources(responseData.sources);

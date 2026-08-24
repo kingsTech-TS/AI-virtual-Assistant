@@ -24,6 +24,7 @@ export interface ChatResponseData {
 
 export interface ChatMessage {
   id: string;
+  _id?: string;
   conversation_id?: string;
   sender: "user" | "assistant" | "system";
   content: string;
