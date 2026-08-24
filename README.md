@@ -1,12 +1,12 @@
 # Intelligent Academic Support Chatbot (Frontend)
 
-An intelligent, full-featured academic advisory and virtual assistant platform built for university students and faculty staff. The frontend communicates with a high-performance FastAPI REST backend integrated with MongoDB Atlas Vector Search and LLM-powered Retrieval-Augmented Generation (RAG).
+An intelligent, full-featured academic advisory and virtual assistant platform built for university students, faculty staff advisors, and system administrators. The frontend communicates with a high-performance FastAPI REST backend integrated with MongoDB Atlas Vector Search and LLM-powered Retrieval-Augmented Generation (RAG).
 
 ---
 
 ## 🌟 Product Vision & Capabilities
 
-The **Academic Virtual Assistant** is designed as a modern **University Student Portal + AI Academic Assistant**. Unlike generic conversational bots, it serves as a verified institutional knowledge gateway with zero-hallucination policies and seamless human staff escalation.
+The **Academic Virtual Assistant** is designed as a modern **University Student Portal + AI Academic Assistant + Staff Helpdesk Portal**. Unlike generic conversational bots, it serves as a verified institutional knowledge gateway with zero-hallucination policies and seamless human staff escalation.
 
 ### Key Capabilities
 
@@ -25,12 +25,17 @@ The **Academic Virtual Assistant** is designed as a modern **University Student 
 4. **Interactive Response Feedback Loop**
    - Students can rate any assistant response (👍 Helpful / 👎 Needs Improvement) and submit qualitative feedback categories to continuously refine the knowledge base.
 
-5. **Comprehensive Faculty & Administrative Operations Suite**
+5. **Dedicated Staff Advisor Portal (`/staff`)**
+   - **Departmental Ticket Queue**: View and respond to support tickets scoped specifically to the staff advisor's academic department.
+   - **Ticket Triage**: Triage tickets with 1-click actions: *Assign to Me*, *Escalate to Urgent*, *Send Official Directive*, and *Mark Resolved*.
+   - **Knowledge Base & FAQ Management**: Upload course syllabi, departmental guidelines, and author verified FAQs.
+
+6. **Comprehensive Executive & Administrative Operations Suite (`/admin`)**
    - **Executive Analytics Overview**: High-level KPIs (Total Students, Inquiries, Open Tickets, AI Satisfaction Rate, Average Confidence).
    - **Knowledge Base Ingestion**: 5-stage document upload & indexing pipeline (`PDF`, `DOCX`, `TXT` -> Extract -> Chunk -> Embed -> Index in Atlas Vector Search).
-   - **FAQ Management**: CRUD interface for common institutional questions and answers.
-   - **Support Ticket Helpdesk**: Triage queue, staff assignment, priority override, internal notes, and direct student replies.
-   - **User & Role Directory**: Student/Staff/Admin management with role modifiers.
+   - **FAQ & Content Publishing**: Centralized CRUD interface for common institutional questions and answers.
+   - **Global Helpdesk Management**: Cross-departmental triage queue, staff assignment, priority override, department reassignment, and ticket closing.
+   - **User & Staff Directory**: Student/Staff/Admin account creation, position assignment, and role elevation.
    - **Department Settings**: Academic department directories, faculty linking, and routing emails.
    - **Audit Logs & Diagnostics**: Immutable operational audit trail and backend health status.
 
@@ -95,19 +100,28 @@ academic-virtual-ass/
 │   │   ├── notifications/page.tsx    # Student Notifications & Announcements
 │   │   └── profile/page.tsx          # Profile & Password Management
 │   │
-│   ├── admin/                        # Faculty & Staff Operations routes
-│   │   ├── layout.tsx                # Role guard for staff/admin
+│   ├── staff/                        # Academic Staff Advisor Portal routes
+│   │   ├── layout.tsx                # Role guard for staff, admin, super_admin
+│   │   ├── page.tsx                  # Staff Advisor Dashboard & KPIs
+│   │   ├── tickets/
+│   │   │   ├── page.tsx              # Department Ticket Queue (with Mine Only filter)
+│   │   │   └── [id]/page.tsx         # Ticket Detail & Staff Actions (Assign/Respond/Resolve)
+│   │   ├── knowledge/page.tsx        # Department Knowledge Base Management
+│   │   └── faqs/page.tsx             # Department FAQ Management
+│   │
+│   ├── admin/                        # System Administrative Suite routes
+│   │   ├── layout.tsx                # Role guard for admin & super_admin
 │   │   ├── page.tsx                  # Executive Overview & KPIs
 │   │   ├── knowledge/
-│   │   │   ├── page.tsx              # Knowledge Base & Document Ingestion
-│   │   │   └── [id]/page.tsx         # Chunk Inspector & Vector Embeddings View
-│   │   ├── faqs/page.tsx             # FAQ Management & CRUD
+│   │   │   ├── page.tsx              # System Knowledge Base & Ingestion
+│   │   │   └── [id]/page.tsx         # Chunk Inspector & Embeddings View
+│   │   ├── faqs/page.tsx             # Global FAQ Management
 │   │   ├── tickets/
 │   │   │   ├── page.tsx              # Helpdesk Triage Queue
-│   │   │   └── [id]/page.tsx         # Advisor Assignment & Official Directives
-│   │   ├── users/page.tsx            # User Management & Role Modifier
+│   │   │   └── [id]/page.tsx         # Full Control (Reassign, Close, Override)
+│   │   ├── users/page.tsx            # User & Staff Account Management
 │   │   ├── departments/page.tsx      # Academic Departments Configuration
-│   │   ├── analytics/page.tsx        # Intent Distribution & Feedback Analytics
+│   │   ├── analytics/page.tsx        # Intent & Vector Coverage Analytics
 │   │   └── settings/page.tsx         # Audit Logs & System Diagnostics
 │   │
 │   ├── layout.tsx                    # Root Layout with Theme, Auth & Query Providers
@@ -115,7 +129,7 @@ academic-virtual-ass/
 │   └── globals.css                   # CSS Variables Design Tokens (Light/Dark Mode)
 │
 ├── components/
-│   ├── layout/                       # Navbar, Footer, StudentSidebar, AdminSidebar, Header, ThemeToggle
+│   ├── layout/                       # Navbar, Footer, StudentSidebar, StaffSidebar, AdminSidebar, Header, ThemeToggle
 │   ├── chat/                         # ChatContainer, ChatSidebar, ChatMessageItem, ChatInput, SourcePanel, etc.
 │   ├── dashboard/                    # WelcomeBanner, QuickActionCard, RecentConversationsWidget, ActiveTicketsWidget
 │   ├── tickets/                      # TicketTimeline, TicketStatusBadge, TicketCreateModal
@@ -128,7 +142,7 @@ academic-virtual-ass/
 │   ├── constants.ts                  # Categories, intents, priorities, and default values
 │   └── utils.ts                      # cn(), badge color resolvers, date formatters
 │
-├── services/                         # REST API integration services
+├── services/                         # REST API integration services (auth, user, ticket, staff, admin, etc.)
 ├── hooks/                            # Custom React Query & context hooks
 ├── types/                            # TypeScript interfaces matching backend models
 └── providers/                        # QueryProvider, AuthProvider, ThemeProvider, ToastProvider
@@ -168,15 +182,20 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ## 🔒 Authentication & Role Flow
 
-- **Student Role**:
+- **Student Role (`student`)**:
   - Registers with Full Name, University Email, Matriculation Number, and Department.
   - Full access to `/dashboard/*` (AI Assistant, Conversation History, Support Tickets, Notifications, Profile).
-  - Restricted from accessing `/admin/*`.
+  - Restricted from accessing `/staff/*` and `/admin/*`.
 
-- **Staff / Admin Role**:
-  - Staff / Admin users can log in via `/login` and are automatically directed to `/admin`.
-  - Access to Knowledge Base ingestion, Helpdesk triage, FAQ publishing, User management, and Intent Analytics.
-  - Can switch between Student Portal and Admin Suite anytime.
+- **Staff Advisor Role (`staff`)**:
+  - Authenticates via `/login` and is automatically routed to `/staff`.
+  - Scoped access to `/staff/*` (Department Ticket Queue, Response Triage, Knowledge Uploads, FAQs).
+  - Restricted from accessing system admin routes like `/admin/users` or `/admin/departments`.
+
+- **Administrator Roles (`admin`, `super_admin`)**:
+  - Authenticates via `/login` and is automatically routed to `/admin`.
+  - Full administrative access to `/admin/*` (System KPIs, Department Management, Staff Creation, Global Ticket Overrides, Security Audit Logs).
+  - Can switch to the Staff or Student portals at any time.
 
 ---
 
@@ -188,5 +207,3 @@ bun run build
 # or
 npm run build
 ```
-#   A I - v i r t u a l - A s s i s t a n t  
- 
