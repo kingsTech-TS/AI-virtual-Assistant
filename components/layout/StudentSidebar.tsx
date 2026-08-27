@@ -60,7 +60,14 @@ export function StudentSidebar({ onClose }: StudentSidebarProps) {
               alt="Academic Portal Logo"
               width={64}
               height={64}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain dark:hidden"
+            />
+            <Image
+              src="/logo2.png"
+              alt="Academic Portal Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain hidden dark:block"
             />
           </div>
           <div>

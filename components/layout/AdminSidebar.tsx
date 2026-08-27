@@ -53,7 +53,14 @@ export function AdminSidebar({ onClose }: AdminSidebarProps) {
               alt="Admin Suite Logo"
               width={64}
               height={64}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain dark:hidden"
+            />
+            <Image
+              src="/logo2.png"
+              alt="Admin Suite Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain hidden dark:block"
             />
           </div>
           <div>

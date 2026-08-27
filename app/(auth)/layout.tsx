@@ -11,7 +11,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <header className="h-16 px-6 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-11 h-11 flex items-center justify-center group-hover:scale-105 transition-transform">
-            <Image src="/logo.png" alt="Academic Assist Logo" width={44} height={44} className="w-full h-full object-contain" />
+            <Image src="/logo.png" alt="Academic Assist Logo" width={44} height={44} className="w-full h-full object-contain dark:hidden" />
+            <Image src="/logo2.png" alt="Academic Assist Logo" width={44} height={44} className="w-full h-full object-contain hidden dark:block" />
           </div>
           <span className="font-bold text-base text-slate-900 dark:text-white tracking-tight">
             Academic Virtual Assistant

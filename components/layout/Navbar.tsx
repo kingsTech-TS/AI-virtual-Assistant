@@ -42,7 +42,14 @@ export function Navbar() {
               alt="Academic Assist Logo"
               width={64}
               height={64}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain dark:hidden"
+            />
+            <Image
+              src="/logo2.png"
+              alt="Academic Assist Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain hidden dark:block"
             />
           </div>
           <div>
