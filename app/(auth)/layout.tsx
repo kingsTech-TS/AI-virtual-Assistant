@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import Link from "next/link";
-import { GraduationCap, ShieldCheck, Sparkles, BookOpen } from "lucide-react";
+import Image from "next/image";
+import { ShieldCheck, Sparkles, BookOpen } from "lucide-react";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -9,8 +10,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       {/* Top Navbar */}
       <header className="h-16 px-6 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 dark:bg-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-            <GraduationCap className="w-5 h-5" />
+          <div className="w-11 h-11 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <Image src="/logo.png" alt="Academic Assist Logo" width={44} height={44} className="w-full h-full object-contain" />
           </div>
           <span className="font-bold text-base text-slate-900 dark:text-white tracking-tight">
             Academic Virtual Assistant

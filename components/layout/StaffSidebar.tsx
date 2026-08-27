@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -35,9 +36,19 @@ export function StaffSidebar({ onClose }: StaffSidebarProps) {
     <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col h-full shrink-0">
       {/* Brand */}
       <div className="h-16 px-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <Link href="/staff" onClick={onClose} className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 dark:bg-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
-            <GraduationCap className="w-5 h-5" />
+        <Link
+          href="/staff"
+          onClick={onClose}
+          className="flex items-center gap-3"
+        >
+          <div className="w-11 h-11 flex items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="Staff Portal Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <span className="font-bold text-sm text-slate-900 dark:text-white tracking-tight flex items-center gap-1">
@@ -81,7 +92,7 @@ export function StaffSidebar({ onClose }: StaffSidebarProps) {
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 isActive
                   ? "bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-semibold shadow-xs"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100",
               )}
             >
               <Icon
@@ -89,7 +100,7 @@ export function StaffSidebar({ onClose }: StaffSidebarProps) {
                   "w-4 h-4 transition-colors",
                   isActive
                     ? "text-blue-600 dark:text-blue-400"
-                    : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
+                    : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300",
                 )}
               />
               <span>{item.label}</span>

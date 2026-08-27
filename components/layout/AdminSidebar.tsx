@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -11,7 +12,6 @@ import {
   Building2,
   BarChart3,
   Settings,
-  ShieldAlert,
   LogOut,
   Sparkles,
   X,
@@ -42,9 +42,19 @@ export function AdminSidebar({ onClose }: AdminSidebarProps) {
     <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col h-full shrink-0">
       {/* Brand */}
       <div className="h-16 px-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <Link href="/admin" onClick={onClose} className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
-            <ShieldAlert className="w-5 h-5" />
+        <Link
+          href="/admin"
+          onClick={onClose}
+          className="flex items-center gap-3"
+        >
+          <div className="w-11 h-11 flex items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="Admin Suite Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <span className="font-bold text-sm text-slate-900 dark:text-white tracking-tight flex items-center gap-1">
@@ -53,7 +63,9 @@ export function AdminSidebar({ onClose }: AdminSidebarProps) {
                 Staff
               </span>
             </span>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Knowledge & Tickets</p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              Knowledge & Tickets
+            </p>
           </div>
         </Link>
 
@@ -75,7 +87,9 @@ export function AdminSidebar({ onClose }: AdminSidebarProps) {
         </div>
         {ADMIN_NAV.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
+          const isActive =
+            pathname === item.href ||
+            (item.href !== "/admin" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.href}
@@ -85,13 +99,15 @@ export function AdminSidebar({ onClose }: AdminSidebarProps) {
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 isActive
                   ? "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 font-semibold shadow-xs"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100",
               )}
             >
               <Icon
                 className={cn(
                   "w-4 h-4 transition-colors",
-                  isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"
+                  isActive
+                    ? "text-indigo-600 dark:text-indigo-400"
+                    : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300",
                 )}
               />
               <span>{item.label}</span>

@@ -1,17 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { ThemeToggle } from "./ThemeToggle";
-import {
-  GraduationCap,
-  ArrowRight,
-  LayoutDashboard,
-  Sparkles,
-  Menu,
-  X,
-} from "lucide-react";
+import { ArrowRight, LayoutDashboard, Sparkles, Menu, X } from "lucide-react";
 
 export function Navbar() {
   const { isAuthenticated, user } = useAuth();
@@ -21,15 +15,15 @@ export function Navbar() {
     user?.role === "admin" || user?.role === "super_admin"
       ? "/admin"
       : user?.role === "staff"
-      ? "/staff"
-      : "/dashboard";
+        ? "/staff"
+        : "/dashboard";
 
   const portalLabel =
     user?.role === "admin" || user?.role === "super_admin"
       ? "Admin Portal"
       : user?.role === "staff"
-      ? "Staff Portal"
-      : "Dashboard";
+        ? "Staff Portal"
+        : "Dashboard";
 
   const navLinks = [
     { href: "/#how-it-works", label: "How It Works" },
@@ -42,15 +36,18 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 group shrink-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 dark:bg-blue-500 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-            <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6" />
+          <div className="w-14 h-14 sm:w-16 sm:h-16 group-hover:scale-105 transition-transform">
+            <Image
+              src="/logo.png"
+              alt="Academic Assist Logo"
+              width={64}
+              height={64}
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
             <span className="font-bold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5">
               Academic Assist
-              <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
-                AI
-              </span>
             </span>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block">
               University Virtual Portal
@@ -110,7 +107,11 @@ export function Navbar() {
             className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
       </div>

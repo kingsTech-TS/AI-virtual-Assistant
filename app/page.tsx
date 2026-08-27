@@ -18,37 +18,43 @@ import {
   GraduationCap,
   MessageSquare,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function LandingPage() {
   const steps = [
     {
       num: "01",
       title: "Ask Naturally",
-      description: "Ask your academic or administrative question in plain English.",
+      description:
+        "Ask your academic or administrative question in plain English.",
       icon: MessageSquare,
     },
     {
       num: "02",
       title: "Intent Classification",
-      description: "The AI recognizes your intent and extracts key course & policy entities.",
+      description:
+        "The AI recognizes your intent and extracts key course & policy entities.",
       icon: Sparkles,
     },
     {
       num: "03",
       title: "RAG Document Retrieval",
-      description: "Atlas Vector Search queries verified university handbooks and regulations.",
+      description:
+        "Atlas Vector Search queries verified university handbooks and regulations.",
       icon: BookOpen,
     },
     {
       num: "04",
       title: "Verified Response & Citations",
-      description: "Receive a structured, grounded answer citing page and document sources.",
+      description:
+        "Receive a structured, grounded answer citing page and document sources.",
       icon: FileText,
     },
     {
       num: "05",
       title: "Advisor Escalation",
-      description: "If needed, seamlessly escalate with 1-click to human staff course advisors.",
+      description:
+        "If needed, seamlessly escalate with 1-click to human staff course advisors.",
       icon: Ticket,
     },
   ];
@@ -84,11 +90,6 @@ export default function LandingPage() {
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-semibold shadow-xs">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>University Student Portal + AI Academic Assistant</span>
-              </div>
-
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
                 Your Intelligent <br className="hidden sm:inline" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500">
@@ -97,7 +98,9 @@ export default function LandingPage() {
               </h1>
 
               <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                Get fast, accurate, and verified answers to your academic regulations, course registration, exam timetables, and student support inquiries.
+                Get fast, accurate, and verified answers to your academic
+                regulations, course registration, exam timetables, and student
+                support inquiries.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
@@ -158,7 +161,8 @@ export default function LandingPage() {
                 <div className="flex items-start gap-3 justify-end">
                   <div className="bg-blue-600 text-white p-3.5 rounded-2xl rounded-tr-sm max-w-md shadow-xs">
                     <p className="font-medium">
-                      How do I register for CSC 301 and what are the prerequisites?
+                      How do I register for CSC 301 and what are the
+                      prerequisites?
                     </p>
                   </div>
                   <div className="w-7 h-7 rounded-xl bg-slate-800 text-white flex items-center justify-center font-bold text-[10px] shrink-0">
@@ -173,18 +177,34 @@ export default function LandingPage() {
                   </div>
                   <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 p-4 rounded-2xl rounded-tl-sm max-w-xl text-slate-800 dark:text-slate-200 space-y-2 shadow-xs">
                     <p className="font-semibold text-slate-900 dark:text-white">
-                      Course registration for CSC 301 requires verified fee clearance and completion of CSC 201:
+                      Course registration for CSC 301 requires verified fee
+                      clearance and completion of CSC 201:
                     </p>
                     <ol className="list-decimal list-inside space-y-1 text-slate-700 dark:text-slate-300">
-                      <li>Log in to the University Student Portal with your matric number.</li>
-                      <li>Navigate to <strong>Course Registration &gt; First Semester</strong>.</li>
-                      <li>Ensure <strong>CSC 201 (Data Structures)</strong> has a passing grade.</li>
-                      <li>Click <strong>Submit Registration</strong> and download your signed course slip.</li>
+                      <li>
+                        Log in to the University Student Portal with your matric
+                        number.
+                      </li>
+                      <li>
+                        Navigate to{" "}
+                        <strong>Course Registration &gt; First Semester</strong>
+                        .
+                      </li>
+                      <li>
+                        Ensure <strong>CSC 201 (Data Structures)</strong> has a
+                        passing grade.
+                      </li>
+                      <li>
+                        Click <strong>Submit Registration</strong> and download
+                        your signed course slip.
+                      </li>
                     </ol>
 
                     {/* Sourced Reference Drawer Preview */}
                     <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">Sources:</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase">
+                        Sources:
+                      </span>
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-[10px] font-medium">
                         📄 Academic Handbook 2026 (p. 24)
                       </span>
@@ -200,7 +220,10 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: HOW IT WORKS */}
-        <section id="how-it-works" className="py-20 bg-white dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800">
+        <section
+          id="how-it-works"
+          className="py-20 bg-white dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800"
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
               <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
@@ -210,7 +233,8 @@ export default function LandingPage() {
                 How Academic AI Support Works
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                End-to-end flow from natural inquiry to grounded verification and staff triage.
+                End-to-end flow from natural inquiry to grounded verification
+                and staff triage.
               </p>
             </div>
 
@@ -252,7 +276,8 @@ export default function LandingPage() {
                 What Can You Ask the Assistant?
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                Instant advice covering every critical aspect of university student life.
+                Instant advice covering every critical aspect of university
+                student life.
               </p>
             </div>
 
@@ -282,7 +307,10 @@ export default function LandingPage() {
         </section>
 
         {/* SECTION: FAQS */}
-        <section id="faqs" className="py-20 bg-white dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800">
+        <section
+          id="faqs"
+          className="py-20 bg-white dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800"
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center space-y-3">
               <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
@@ -316,8 +344,14 @@ export default function LandingPage() {
         <section className="py-20">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="rounded-3xl bg-gradient-to-br from-blue-900 via-indigo-950 to-slate-900 text-white p-8 sm:p-12 text-center shadow-2xl space-y-6">
-              <div className="w-14 h-14 rounded-3xl bg-white/10 backdrop-blur-md text-blue-400 flex items-center justify-center mx-auto border border-white/10">
-                <GraduationCap className="w-7 h-7" />
+              <div className="w-14 h-14 rounded-3xl bg-white backdrop-blur-md text-blue-400 flex items-center justify-center mx-auto border border-white/10">
+                <Image
+                  src="/logo.png"
+                  alt="Academic Assist Logo"
+                  width={72}
+                  height={72}
+                  className="w-full h-full object-contain"
+                />
               </div>
 
               <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
@@ -325,7 +359,8 @@ export default function LandingPage() {
               </h2>
 
               <p className="text-xs sm:text-sm text-blue-100/80 max-w-lg mx-auto leading-relaxed">
-                Join students and course advisors across all university faculties on a unified, verified academic support platform.
+                Join students and course advisors across all university
+                faculties on a unified, verified academic support platform.
               </p>
 
               <div className="pt-2">
