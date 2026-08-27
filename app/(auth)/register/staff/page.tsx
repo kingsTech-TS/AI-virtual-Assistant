@@ -4,17 +4,28 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
 import { useAuthOptions } from "@/hooks/use-auth-options";
-import { Lock, Mail, User, BookOpen, GraduationCap, Phone, ArrowRight, Loader2, Building2 } from "lucide-react";
+import {
+  Lock,
+  Mail,
+  User,
+  BookOpen,
+  Phone,
+  ArrowRight,
+  Loader2,
+  Building2,
+  IdCard,
+  Briefcase,
+} from "lucide-react";
 import { toast } from "sonner";
 
-export default function RegisterPage() {
-  const { register, isLoading } = useAuth();
+export default function StaffRegisterPage() {
+  const { registerStaff, isLoading } = useAuth();
   const { departments, faculties, departmentsIsLoading, facultiesIsLoading } = useAuthOptions();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [matricNumber, setMatricNumber] = useState("");
-  const [matricError, setMatricError] = useState("");
+  const [staffId, setStaffId] = useState("");
+  const [position, setPosition] = useState("");
   const [departmentId, setDepartmentId] = useState("");
   const [faculty, setFaculty] = useState("");
   const [phone, setPhone] = useState("");
@@ -35,35 +46,8 @@ export default function RegisterPage() {
     }
   }, [departmentId, departments]);
 
-  const validateMatricNumber = (value: string): boolean => {
-    const digitsOnly = value.replace(/\D/g, "");
-    if (digitsOnly.length !== 9) {
-      setMatricError("Matric number must contain exactly 9 digits");
-      return false;
-    }
-    setMatricError("");
-    return true;
-  };
-
-  const handleMatricChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setMatricNumber(value);
-    if (value) {
-      validateMatricNumber(value);
-    } else {
-      setMatricError("");
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateMatricNumber(matricNumber)) {
-      toast.error("Invalid Matric Number", {
-        description: "Matric number must contain exactly 9 digits.",
-      });
-      return;
-    }
 
     if (password !== confirmPassword) {
       toast.error("Password Mismatch", {
@@ -73,11 +57,12 @@ export default function RegisterPage() {
     }
 
     try {
-      await register({
+      await registerStaff({
         name: name.trim(),
         email: email.trim(),
         password,
-        matric_number: matricNumber.trim(),
+        staff_id: staffId.trim() || undefined,
+        position: position.trim() || undefined,
         department_id: departmentId || undefined,
         faculty: faculty.trim() || undefined,
         phone: phone.trim() || undefined,
@@ -90,32 +75,32 @@ export default function RegisterPage() {
     <div className="p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl max-w-lg mx-auto">
       <div className="mb-5">
         <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Create Student Account
+          Create Staff Account
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Register with your institutional matriculation number to get started.
+          Register as staff to manage tickets and assist students.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div>
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            Full Name *
-          </label>
-          <div className="relative mt-1">
-            <User className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Alex Johnson"
-              className="w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 outline-hidden"
-            />
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="sm:col-span-2">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Full Name *
+            </label>
+            <div className="relative mt-1">
+              <User className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Dr. Jane Smith"
+                className="w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 outline-hidden"
+              />
+            </div>
+          </div>
+
           <div>
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
               University Email *
@@ -127,7 +112,7 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="student@univ.edu"
+                placeholder="staff@univ.edu"
                 className="w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 outline-hidden"
               />
             </div>
@@ -135,27 +120,34 @@ export default function RegisterPage() {
 
           <div>
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Matric Number * (9 digits)
+              Staff ID
             </label>
             <div className="relative mt-1">
-              <GraduationCap className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <IdCard className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
-                required
-                value={matricNumber}
-                onChange={handleMatricChange}
-                placeholder="e.g. 202212345"
-                inputMode="numeric"
-                className={`w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 outline-hidden ${
-                  matricError
-                    ? "border-red-400 focus:ring-red-500"
-                    : "border-slate-200 dark:border-slate-700 focus:ring-blue-500"
-                }`}
+                value={staffId}
+                onChange={(e) => setStaffId(e.target.value)}
+                placeholder="e.g. STF-2024-001"
+                className="w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 outline-hidden"
               />
             </div>
-            {matricError && (
-              <p className="mt-1 text-xs text-red-500">{matricError}</p>
-            )}
+          </div>
+        </div>
+
+        <div>
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Position / Role
+          </label>
+          <div className="relative mt-1">
+            <Briefcase className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              placeholder="e.g. Senior Lecturer, Academic Advisor"
+              className="w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 outline-hidden"
+            />
           </div>
         </div>
 
@@ -270,11 +262,11 @@ export default function RegisterPage() {
           {isLoading ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Creating Account...</span>
+              <span>Creating Staff Account...</span>
             </>
           ) : (
             <>
-              <span>Complete Registration</span>
+              <span>Complete Staff Registration</span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}
@@ -292,12 +284,12 @@ export default function RegisterPage() {
           </Link>
         </p>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-          Are you staff?{" "}
+          Are you a student?{" "}
           <Link
-            href="/register/staff"
+            href="/register"
             className="font-bold text-blue-600 dark:text-blue-400 hover:underline"
           >
-            Register as Staff
+            Register as Student
           </Link>
         </p>
       </div>

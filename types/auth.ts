@@ -41,6 +41,25 @@ export interface RegisterRequest {
   phone?: string | null;
 }
 
+export interface StaffRegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  staff_id?: string | null;
+  position?: string | null;
+  department_id?: string | null;
+  faculty?: string | null;
+  phone?: string | null;
+}
+
+export interface DepartmentOption {
+  id: string;
+  _id?: string;
+  name: string;
+  code: string;
+  faculty: string;
+}
+
 export interface RefreshRequest {
   refresh_token: string;
 }

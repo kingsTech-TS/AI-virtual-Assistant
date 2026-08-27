@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useUsers } from "@/hooks/use-users";
 import { useDepartments } from "@/hooks/use-departments";
+import { useAuthOptions } from "@/hooks/use-auth-options";
 import { adminService } from "@/services/admin.service";
 import { UserRole } from "@/types/auth";
 import { LoadingState } from "@/components/shared/LoadingState";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { PaginationControls } from "@/components/shared/PaginationControls";
-import { Users, Plus, Search, ShieldCheck, Mail, GraduationCap, X, Send, Briefcase, BadgePercent } from "lucide-react";
+import { Users, Plus, Search, ShieldCheck, Mail, X, Send } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { parseApiError } from "@/lib/api";
@@ -20,6 +21,7 @@ export default function AdminUsersPage() {
 
   const { users, isLoading, createUser, changeRole, isMutating, data, refetch } = useUsers({ page, limit: 15 });
   const { departments } = useDepartments();
+  const { faculties, facultiesIsLoading } = useAuthOptions();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
@@ -31,6 +33,20 @@ export default function AdminUsersPage() {
   const [departmentId, setDepartmentId] = useState("");
   const [faculty, setFaculty] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const filteredDepartments = useMemo(() => {
+    if (!faculty) return departments;
+    return departments.filter((d) => d.faculty === faculty);
+  }, [departments, faculty]);
+
+  useEffect(() => {
+    if (departmentId) {
+      const dept = departments.find((d) => (d.id || d._id) === departmentId);
+      if (dept && dept.faculty) {
+        setFaculty(dept.faculty);
+      }
+    }
+  }, [departmentId, departments]);
 
   const pagination = data?.pagination;
 
@@ -322,7 +338,7 @@ export default function AdminUsersPage() {
                   <select
                     value={role}
                     onChange={(e) => setRole(e.target.value as "student" | "staff" | "admin")}
-                    className="mt-1 w-full text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden"
+                    className="mt-1 w-full text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden appearance-none"
                   >
                     <option value="staff">Course Advisor / Staff</option>
                     <option value="student">Student</option>
@@ -332,17 +348,41 @@ export default function AdminUsersPage() {
 
                 <div>
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    Faculty
+                  </label>
+                  <select
+                    value={faculty}
+                    onChange={(e) => {
+                      setFaculty(e.target.value);
+                      setDepartmentId("");
+                    }}
+                    disabled={facultiesIsLoading && faculties.length === 0}
+                    className="mt-1 w-full text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden appearance-none disabled:opacity-60"
+                  >
+                    <option value="">Select Faculty...</option>
+                    {faculties.map((f) => (
+                      <option key={f} value={f}>
+                        {f}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-2">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     Department
                   </label>
                   <select
                     value={departmentId}
                     onChange={(e) => setDepartmentId(e.target.value)}
-                    className="mt-1 w-full text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden"
+                    className="mt-1 w-full text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-hidden appearance-none"
                   >
                     <option value="">None / General</option>
-                    {departments.map((d) => (
+                    {filteredDepartments.map((d) => (
                       <option key={d.id || d._id} value={d.id || d._id}>
-                        {d.name}
+                        {d.name} ({d.code})
                       </option>
                     ))}
                   </select>

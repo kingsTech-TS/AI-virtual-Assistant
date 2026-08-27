@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useDepartments } from "@/hooks/use-departments";
+import { useAuthOptions } from "@/hooks/use-auth-options";
 import { userService } from "@/services/user.service";
 import { User, Mail, GraduationCap, Building2, Phone, Lock, Save, ShieldCheck, Check } from "lucide-react";
 import { toast } from "sonner";
@@ -11,6 +12,7 @@ import { parseApiError } from "@/lib/api";
 export default function ProfilePage() {
   const { user, refreshUser } = useAuth();
   const { departments } = useDepartments();
+  const { faculties, facultiesIsLoading } = useAuthOptions();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -23,6 +25,20 @@ export default function ProfilePage() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [isChangingPass, setIsChangingPass] = useState(false);
+
+  const filteredDepartments = useMemo(() => {
+    if (!faculty) return departments;
+    return departments.filter((d) => d.faculty === faculty);
+  }, [departments, faculty]);
+
+  useEffect(() => {
+    if (departmentId) {
+      const dept = departments.find((d) => (d.id || d._id) === departmentId);
+      if (dept && dept.faculty) {
+        setFaculty(dept.faculty);
+      }
+    }
+  }, [departmentId, departments]);
 
   useEffect(() => {
     if (user) {
@@ -175,19 +191,23 @@ export default function ProfilePage() {
 
             <div>
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Department
+                Faculty
               </label>
               <div className="relative mt-1">
-                <Building2 className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Building2 className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                 <select
-                  value={departmentId}
-                  onChange={(e) => setDepartmentId(e.target.value)}
-                  className="w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 outline-hidden"
+                  value={faculty}
+                  onChange={(e) => {
+                    setFaculty(e.target.value);
+                    setDepartmentId("");
+                  }}
+                  disabled={facultiesIsLoading && faculties.length === 0}
+                  className="w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 outline-hidden disabled:opacity-60 appearance-none"
                 >
-                  <option value="">Select Department...</option>
-                  {departments.map((d) => (
-                    <option key={d.id || d._id} value={d.id || d._id}>
-                      {d.name} ({d.code})
+                  <option value="">Select Faculty...</option>
+                  {faculties.map((f) => (
+                    <option key={f} value={f}>
+                      {f}
                     </option>
                   ))}
                 </select>
@@ -196,15 +216,23 @@ export default function ProfilePage() {
 
             <div>
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Faculty
+                Department
               </label>
-              <input
-                type="text"
-                value={faculty}
-                onChange={(e) => setFaculty(e.target.value)}
-                placeholder="Faculty of Science"
-                className="mt-1 w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 outline-hidden"
-              />
+              <div className="relative mt-1">
+                <Building2 className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <select
+                  value={departmentId}
+                  onChange={(e) => setDepartmentId(e.target.value)}
+                  className="w-full text-xs rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-4 py-2.5 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 outline-hidden appearance-none"
+                >
+                  <option value="">Select Department...</option>
+                  {filteredDepartments.map((d) => (
+                    <option key={d.id || d._id} value={d.id || d._id}>
+                      {d.name} ({d.code})
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <button

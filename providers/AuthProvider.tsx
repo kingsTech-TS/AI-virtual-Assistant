@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { User, LoginRequest, RegisterRequest, UserRole } from "@/types/auth";
+import { createContext, useEffect, useState, ReactNode } from "react";
+import { User, LoginRequest, RegisterRequest, StaffRegisterRequest, UserRole } from "@/types/auth";
 import { authService } from "@/services/auth.service";
 import { userService } from "@/services/user.service";
 import {
@@ -21,6 +21,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
+  registerStaff: (data: StaffRegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   updateProfile: (data: { name?: string; phone?: string; faculty?: string; department_id?: string }) => Promise<void>;
@@ -105,6 +106,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const registerStaff = async (data: StaffRegisterRequest) => {
+    try {
+      setIsLoading(true);
+      await authService.registerStaff(data);
+      toast.success("Staff account created successfully", {
+        description: "You can now log in with your credentials.",
+      });
+      router.push("/login");
+    } catch (err) {
+      const msg = parseApiError(err);
+      toast.error("Staff Registration Failed", { description: msg });
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async () => {
     try {
       await authService.logout();
@@ -145,6 +163,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated: !!user,
         login,
         register,
+        registerStaff,
         logout,
         refreshUser,
         updateProfile,
